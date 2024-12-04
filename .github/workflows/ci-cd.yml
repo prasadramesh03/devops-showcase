@@ -1,0 +1,37 @@
+name: DevOps Showcase CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install Dependencies
+      run: |
+        npm install -w frontend
+        npm install -w backend
+    
+    - name: Run Tests
+      run: |
+        npm test -w frontend
+        npm test -w backend
+    
+    - name: Build Docker Images
+      run: docker-compose build
+    
+    - name: Push to Azure Container Registry
+      run: |
+        az acr login -n ${{ secrets.AZURE_REGISTRY_NAME }}
+        docker push ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/devops-showcase:${{ github.sha }}
