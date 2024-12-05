@@ -1,20 +1,18 @@
-version: '3.8'  # Optional: You can remove this line if you get the obsolete warning
-
 services:
   frontend:
     build:
-      context: ./frontend  # Path to frontend folder
-      dockerfile: Dockerfile.frontend  # Reference to the frontend Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
     ports:
-      - "3000:3000"  # Exposes port 3000 for the frontend
-  
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+
   backend:
     build:
-      context: ./backend  # Path to the backend folder
-      dockerfile: Dockerfile.backend  # Reference to the backend Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile.backend
     ports:
-      - "3001:3001"  # Exposes port 3001 for the backend
-    volumes:
-      - ./backend:/app  # Optional: Sync your local backend files with the container
+      - "4000:4000"
     environment:
-      - NODE_ENV=production  # Optional: Set environment variables
+      - NODE_ENV=development
